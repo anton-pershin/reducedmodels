@@ -107,6 +107,12 @@ class MoehlisFaisstEckhardtModel(DynamicalSystem):
         u[7, :] = self.N_8 * np.array([np.pi*sin_a_x*sin_pi_y*sin_g_z, 2.*(self.alpha**2 + self.gamma**2)*cos_a_x*cos_pi_y*sin_g_z, -np.pi*self.gamma*cos_a_x*sin_pi_y*cos_g_z])
         u[8, :] = np.array([np.sqrt(2)*np.sin(3.*np.pi*y/2.), 0, 0])
 
+    def kinetic_energy(self, u):
+        axis = 0
+        if len(u.shape) == 2:
+            axis = 1
+        return (2.*np.pi)**2 / (self.alpha * self.gamma) * np.sum(u**2, axis=axis)
+
 
 class BarkleyPipeModel(DynamicalSystem):
     def __init__(self, x_dim, delta_x, r, zeta, D, U_0, U_bar, delta, epsilon_1, epsilon_2, sigma):

@@ -236,20 +236,21 @@ def euler_timestepping(model: DynamicalSystem, ic, delta_t, n_steps, time_skip=1
     return timeseries
 
 
-def rk4_timestepping(model: DynamicalSystem, ic, delta_t, n_steps, time_skip=1, space_skip=1):
+def rk4_timestepping(model: DynamicalSystem, ic, delta_t, n_steps, time_skip=1, space_skip=1, debug=True, stop_condition=lambda state: False):
     timeseries = np.zeros((int(n_steps//time_skip) + 1, int(model.dim//space_skip)))
     cur_state = ic
     for k in range(n_steps):
         if k % time_skip == 0:
-            print(f't = {k*delta_t}', f'l = {k}')
             timeseries[int(k//time_skip), :] = cur_state[::space_skip]
-        if k % int(n_steps//10) == 0:
+        if (k % int(n_steps//10) == 0) and debug:
             print('Step {} out of {}'.format(k, n_steps))
         k_1 = delta_t*model.f(cur_state)
         k_2 = delta_t*model.f(cur_state + k_1/2.)
         k_3 = delta_t*model.f(cur_state + k_2/2.)
         k_4 = delta_t*model.f(cur_state + k_3)
         cur_state = cur_state + 1/6. * (k_1 + 2*k_2 + 2*k_3 + k_4)
+        if stop_condition(cur_state):
+            return timeseries[:int(k//time_skip) + 1, :]
     return timeseries
 
 

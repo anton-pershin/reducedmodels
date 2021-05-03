@@ -23,6 +23,7 @@ class MoehlisFaisstEckhardtModel(DynamicalSystem):
         self.k_ag = np.sqrt(self.alpha**2 + self.gamma**2)
         self.k_bg = np.sqrt(self.beta**2 + self.gamma**2)
         self.k_abg = np.sqrt(self.alpha**2 + self.beta**2 + self.gamma**2)
+        self.laminar_state = np.array([1., 0., 0., 0., 0., 0., 0., 0., 0.])
         super().__init__(9)
 
     def f(self, u):
@@ -112,9 +113,6 @@ class MoehlisFaisstEckhardtModel(DynamicalSystem):
         if len(u.shape) == 2:
             axis = 1
         return (2.*np.pi)**2 / (self.alpha * self.gamma) * np.sum(u**2, axis=axis)
-
-    def laminar_state(self):
-        return np.array([1., 0., 0., 0., 0., 0., 0., 0., 0.])
 
 
 class BarkleyPipeModel(DynamicalSystem):

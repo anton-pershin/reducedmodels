@@ -113,6 +113,9 @@ class MoehlisFaisstEckhardtModel(DynamicalSystem):
             axis = 1
         return (2.*np.pi)**2 / (self.alpha * self.gamma) * np.sum(u**2, axis=axis)
 
+    def laminar_state(self):
+        return np.array([1., 0., 0., 0., 0., 0., 0., 0., 0.])
+
 
 class BarkleyPipeModel(DynamicalSystem):
     def __init__(self, x_dim, delta_x, r, zeta, D, U_0, U_bar, delta, epsilon_1, epsilon_2, sigma):

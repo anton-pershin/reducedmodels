@@ -166,6 +166,17 @@ class MoehlisFaisstEckhardtModel(DynamicalSystem):
         u[6, :] = 2.* np.sqrt(2)/np.sqrt(self.alpha**2 + self.gamma**2) * np.array([self.gamma*sin_a_x*sin_pi_y*sin_g_z, 0, self.alpha*cos_a_x*sin_pi_y*cos_g_z])
         u[7, :] = self.N_8 * np.array([np.pi*sin_a_x*sin_pi_y*sin_g_z, 2.*(self.alpha**2 + self.gamma**2)*cos_a_x*cos_pi_y*sin_g_z, -np.pi*self.gamma*cos_a_x*sin_pi_y*cos_g_z])
         u[8, :] = np.array([np.sqrt(2)*np.sin(3.*np.pi*y/2.), 0, 0])
+        return u
+
+    def kinetic_energy(self, u):
+        axis = 0
+        if len(u.shape) == 2:
+            axis = 1
+        return (2.*np.pi)**2 / (self.alpha * self.gamma) * np.sum(u**2, axis=axis)
+
+    def three_dim_flow_field(self, a, x, y, z):
+        u = self.modes(x, y, z)
+        return np.sum(np.dot(a, u))
 
 
 class BarkleyPipeModel(DynamicalSystem):

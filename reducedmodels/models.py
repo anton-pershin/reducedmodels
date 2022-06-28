@@ -234,6 +234,24 @@ class BarkleyPipeModel(DynamicalSystem):
              + self.epsilon_2 * (self.U_bar - self._u(u, i)) * self._q(u, i)
 
 
+class BrusselatorModel(DynamicalSystem):
+    def __init__(self, a, b):
+        """
+        This class sets up the Brusselator model:
+        \frac{dx}{dt} = a + x^2 y - bx - x
+        \frac{dy}{dt} = bx - x^2 y
+        """
+        self.a = a
+        self.b = b
+        super().__init__(2)
+
+    def f(self, u):
+        f_ = np.zeros(self.dim)
+        f_[0] = self.a + u[0]**2 * u[1] - self.b * u[0] - u[0]
+        f_[1] = self.b * u[0] - u[0]**2 * u[1]
+        return f_
+
+
 def euler_timestepping(model: DynamicalSystem, ic, delta_t, n_steps, time_skip=1, space_skip=1):
     timeseries = np.zeros((int(n_steps//time_skip) + 1, int(model.dim//space_skip)))
     cur_state = ic
